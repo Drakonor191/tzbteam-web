@@ -11,5 +11,11 @@
 </head>
 <body>
   <h1>TZBTEAM</h1>
+  <script>
+    // Si llega con token de recovery, redirigir a reset.html conservando el hash
+    if (window.location.hash && window.location.hash.includes('type=recovery')) {
+      window.location.replace('./reset.html' + window.location.hash);
+    }
+  </script>
 </body>
 </html>
