@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restablecer contraseña — TZBTEAM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    max-width: 440px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .header {
+    background: #1a1a2e;
+    padding: 32px 24px 24px;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #c8a97e;
+    letter-spacing: 5px;
+    margin-bottom: 4px;
+  }
+  .header p {
+    font-size: 12px;
+    color: #a0a0b0;
+    letter-spacing: 1px;
+  }
+  .body { padding: 36px 32px; }
+  .icon {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 20px;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+  .input-row {
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .input-row:focus-within { border-color: #c8a97e; }
+  input[type="password"], input[type="text"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 13px 14px;
+    font-size: 15px;
+    color: #1a1a2e;
+  }
+  .eye-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 14px;
+    font-size: 18px;
+    color: #9ca3af;
+  }
+  .requisitos { margin-bottom: 10px; }
+  .requisito {
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 22px;
+    transition: color 0.2s;
+  }
+  .requisito.ok {
+    color: #4caf50;
+    text-decoration: line-through;
+  }
+  .btn {
+    width: 100%;
+    background: #c8a97e;
+    color: #1a1a2e;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .msg {
+    margin-top: 16px;
+    font-size: 13px;
+    text-align: center;
+    line-height: 20px;
+    min-height: 20px;
+  }
+  .msg.error { color: #ef4444; }
+  .msg.success { color: #4caf50; }
+  .footer {
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 20px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  .footer a { color: #c8a97e; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <h1>TZBTEAM</h1>
+    <p>Tu asesoría de nutrición y entrenamiento</p>
+  </div>
+
+  <div class="body">
+    <div class="icon">🔒</div>
+    <h2>Nueva contraseña</h2>
+    <p class="subtitle">Elige una contraseña segura para tu cuenta.</p>
+
+    <div id="form-section">
+      <label>Nueva contraseña</label>
+      <div class="requisitos" id="requisitos">
+        <div class="requisito" id="req-longitud">• Mínimo 10 caracteres</div>
+        <div class="requisito" id="req-mayuscula">• Al menos una mayúscula</div>
+        <div class="requisito" id="req-numero">• Al menos un número</div>
+        <div class="requisito" id="req-simbolo">• Al menos un símbolo (!, @, #…)</div>
+      </div>
+      <div class="input-row">
+        <input type="password" id="password" placeholder="Nueva contraseña" autocomplete="new-password" />
+        <button class="eye-btn" type="button" onclick="toggleVer('password', this)">👁</button>
+      </div>
+
+      <label>Confirmar contraseña</label>
+      <div class="input-row">
+        <input type="password" id="confirmar" placeholder="Repite la contraseña" autocomplete="new-password" />
+        <button class="eye-btn" type="button" onclick="toggleVer('confirmar', this)">👁</button>
+      </div>
+
+      <button class="btn" id="btn" onclick="handleReset()">Guardar contraseña</button>
+      <p class="msg" id="msg"></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    ¿Necesitas ayuda? <a href="mailto:zamorabernal89@yahoo.com">zamorabernal89@yahoo.com</a><br><br>
+    © 2026 Alejandro Olid Gómez — TZBTEAM. Todos los derechos reservados.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://hqtxxmgftnqzarnhvupy.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxdHh4bWdmdG5xemFybmh2dXB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0MjA5MDIsImV4cCI6MjA1ODk5NjkwMn0.VbWMKtVUbmaacGxPMknbKXjLkIkYCfSFQuzl_69yMc4';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const REQUISITOS = [
+    { id: 'req-longitud',  test: (p) => p.length >= 10 },
+    { id: 'req-mayuscula', test: (p) => /[A-Z]/.test(p) },
+    { id: 'req-numero',    test: (p) => /[0-9]/.test(p) },
+    { id: 'req-simbolo',   test: (p) => /[^A-Za-z0-9]/.test(p) },
+  ];
+
+  document.getElementById('password').addEventListener('input', () => {
+    const p = document.getElementById('password').value;
+    REQUISITOS.forEach(({ id, test }) => {
+      document.getElementById(id).classList.toggle('ok', test(p));
+      document.getElementById(id).textContent =
+        (test(p) ? '✓ ' : '• ') + document.getElementById(id).textContent.slice(2);
+    });
+  });
+
+  function toggleVer(inputId, btn) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function setMsg(text, type) {
+    const el = document.getElementById('msg');
+    el.textContent = text;
+    el.className = 'msg ' + type;
+  }
+
+  async function handleReset() {
+    const password = document.getElementById('password').value;
+    const confirmar = document.getElementById('confirmar').value;
+
+    const fallido = REQUISITOS.find(({ test }) => !test(password));
+    if (fallido) {
+      setMsg('La contraseña no cumple todos los requisitos.', 'error');
+      return;
+    }
+    if (password !== confirmar) {
+      setMsg('Las contraseñas no coinciden.', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('btn');
+    btn.disabled = true;
+    btn.textContent = 'Guardando…';
+    setMsg('', '');
+
+    const { error } = await sb.auth.updateUser({ password });
+
+    if (error) {
+      setMsg(error.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Guardar contraseña';
+    } else {
+      setMsg('✓ Contraseña actualizada correctamente. Ya puedes cerrar esta página y entrar en la app.', 'success');
+      document.getElementById('form-section').style.opacity = '0.4';
+      document.getElementById('form-section').style.pointerEvents = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>
