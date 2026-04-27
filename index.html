@@ -194,9 +194,6 @@
     el.className = 'msg ' + type;
   }
 
-  console.log('HASH:', window.location.hash);
-  console.log('SEARCH:', window.location.search);
-
   (async () => {
     const hp = new URLSearchParams(window.location.hash.slice(1));
     const accessToken = hp.get('access_token');
@@ -208,11 +205,9 @@
     const typeQp = qp.get('type');
 
     if (accessToken && typeHash === 'recovery') {
-      const { data, error } = await sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || '' });
-      console.log('setSession data:', JSON.stringify(data));
-      console.log('setSession error:', JSON.stringify(error));
+      const { error } = await sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || '' });
       if (error) {
-        setMsg('Error: ' + error.message, 'error');
+        setMsg('Enlace inválido o expirado. Solicita uno nuevo desde la app.', 'error');
         document.getElementById('btn').disabled = true;
       }
     } else if (tokenHash && typeQp === 'recovery') {
