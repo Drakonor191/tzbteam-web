@@ -205,9 +205,11 @@
     const typeQp = qp.get('type');
 
     if (accessToken && typeHash === 'recovery') {
-      const { error } = await sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || '' });
+      const { data, error } = await sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken || '' });
+      console.log('setSession data:', JSON.stringify(data));
+      console.log('setSession error:', JSON.stringify(error));
       if (error) {
-        setMsg('Enlace inválido o expirado. Solicita uno nuevo desde la app.', 'error');
+        setMsg('Error: ' + error.message, 'error');
         document.getElementById('btn').disabled = true;
       }
     } else if (tokenHash && typeQp === 'recovery') {
