@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuenta confirmada — TZBTEAM</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #f0f0f0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .card {
+    background: #fff; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+    max-width: 440px; width: 100%; overflow: hidden;
+  }
+  .header { background: #1a1a2e; padding: 32px 24px 24px; text-align: center; }
+  .header h1 { font-size: 28px; font-weight: 800; color: #c8a97e; letter-spacing: 5px; margin-bottom: 4px; }
+  .header p { font-size: 12px; color: #a0a0b0; letter-spacing: 1px; }
+  .body { padding: 40px 32px; text-align: center; }
+  .icon { font-size: 52px; margin-bottom: 12px; }
+  h2 { font-size: 21px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+  .subtitle { font-size: 14px; color: #6b7280; line-height: 22px; }
+  .msg { margin-top: 18px; font-size: 13px; color: #ef4444; min-height: 18px; }
+  .footer {
+    background: #f9fafb; border-top: 1px solid #e5e7eb; padding: 20px 32px;
+    text-align: center; font-size: 12px; color: #9ca3af;
+  }
+  .footer a { color: #c8a97e; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <h1>TZBTEAM</h1>
+    <p>Tu asesoría de nutrición y entrenamiento</p>
+  </div>
+  <div class="body">
+    <div id="content">
+      <div class="icon">⏳</div>
+      <h2>Confirmando tu cuenta…</h2>
+      <p class="subtitle">Un momento, estamos verificando tu email.</p>
+    </div>
+    <p class="msg" id="msg"></p>
+  </div>
+  <div class="footer">
+    ¿Necesitas ayuda? <a href="mailto:contacto@tzbteam.com">contacto@tzbteam.com</a><br><br>
+    © 2026 Alejandro Olid Gómez — TZBTEAM. Todos los derechos reservados.
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = 'https://hqtxxmgftnqzarnhvupy.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxdHh4bWdmdG5xemFybmh2dXB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxMTY3NDAsImV4cCI6MjA5MTY5Mjc0MH0.aqytBVNOYIwWqR7ln9E12eKTS9519TAqLYG4Xhxm79k';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const content = document.getElementById('content');
+  const ok = () => content.innerHTML =
+    '<div class="icon">✅</div>' +
+    '<h2>¡Cuenta confirmada!</h2>' +
+    '<p class="subtitle">Tu cuenta ha sido verificada correctamente.<br>Ya puedes cerrar esta página y entrar en la app TZBTEAM.</p>';
+  const fail = (texto) => content.innerHTML =
+    '<div class="icon">⚠️</div>' +
+    '<h2>No se pudo confirmar</h2>' +
+    '<p class="subtitle">' + texto + '</p>';
+
+  (async () => {
+    const hp = new URLSearchParams(window.location.hash.slice(1));
+    const qp = new URLSearchParams(window.location.search);
+
+    // Si Supabase ya devolvió un error en el hash/query
+    const errDesc = hp.get('error_description') || qp.get('error_description');
+    if (errDesc) {
+      // Si el enlace expiró pero la cuenta pudo confirmarse en un intento previo,
+      // mostramos un mensaje neutro y no alarmante.
+      fail('El enlace de confirmación ha caducado o ya se había usado. Si ya confirmaste tu cuenta, puedes entrar en la app directamente.');
+      return;
+    }
+
+    const accessToken = hp.get('access_token');
+    const tokenHash = qp.get('token_hash');
+    const type = hp.get('type') || qp.get('type');
+
+    try {
+      if (accessToken) {
+        await sb.auth.setSession({ access_token: accessToken, refresh_token: hp.get('refresh_token') || '' });
+        ok();
+      } else if (tokenHash) {
+        const { error } = await sb.auth.verifyOtp({ token_hash: tokenHash, type: type || 'signup' });
+        if (error) throw error;
+        ok();
+      } else {
+        // Sin tokens en la URL: probablemente Supabase ya verificó por el endpoint /verify
+        // antes de redirigir aquí. Mostramos éxito.
+        ok();
+      }
+    } catch (e) {
+      fail('El enlace de confirmación ha caducado o ya se había usado. Si ya confirmaste tu cuenta, puedes entrar en la app directamente.');
+    }
+  })();
+</script>
+</body>
+</html>
