@@ -270,7 +270,8 @@
       btn.textContent = 'Guardar contraseña';
     } else {
       setMsg('✓ Contraseña actualizada correctamente. Ya puedes cerrar esta página y entrar en la app.', 'success');
-      document.getElementById('form-section').style.opacity = '0.4';
+      btn.textContent = '✓ Contraseña actualizada';
+      document.getElementById('form-section').style.opacity = '0.5';
       document.getElementById('form-section').style.pointerEvents = 'none';
     }
   }
