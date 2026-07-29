@@ -1,11 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.tzbteam.app",
       "sha256_cert_fingerprints": [
-        "F3:DB:81:2A:D1:E7:64:AF:87:3F:CD:44:2A:C5:F7:85:97:94:C1:02:01:8B:2B:24:3E:77:12:93:94:CB:74:C2"
+        "F3:DB:81:2A:D1:E7:64:AF:87:3F:CD:44:2A:C5:F7:85:97:94:C1:02:01:8B:2B:24:3E:77:12:93:94:CB:74:C2",
+        "98:BD:F0:B8:A0:D4:43:A7:22:83:4D:DD:8C:92:5A:4C:6C:C5:FE:95:50:4A:0D:D7:23:23:45:EC:A2:D7:F8:3C"
       ]
     }
   }
